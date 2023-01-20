@@ -1,0 +1,76 @@
+body {
+    background-color: black;
+    font-family: "Droid Sans Mono", sans-serif;
+}
+
+#ProtonWrapper {
+    display: flex;
+    height: 50vh;
+    width: 100%;
+    background-color: #242424;
+    border-radius: .5rem;
+}
+
+#autoformatHolder {
+    position: absolute;
+    color: white;
+    margin: .3rem;
+    padding: .5rem;
+    right: 0;
+}
+
+#Ph-line-count {
+    width: max-content;
+    margin: .3rem;
+    padding: .5rem;
+    text-align: center;
+    line-height: 1.5;
+    background-color: #3b3b3b;
+    border-radius: inherit;
+    color: white;
+    overflow-y: auto;
+}
+
+#Proton-editor {
+    height: 47vh;
+    width: 95vw;
+    margin: .3rem;
+    padding: .5rem;
+    color: #eeeeee;
+    outline: none;
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.symbol {
+    color: rgb(167, 167, 167);
+}
+
+.keyword {
+    color: #bd93f9;
+}
+
+.text {
+    color: #cacaca;
+}
+
+.string {
+    color: #f1fa8c;
+}
+
+.number {
+    color: #bd93f9;
+}
+
+.function {
+    color: #50fa7b;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+::-webkit-scrollbar-corner {
+    display: none;
+}
