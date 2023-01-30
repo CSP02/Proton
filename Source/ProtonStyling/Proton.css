@@ -41,6 +41,7 @@ body {
     line-height: 1.5;
     white-space: nowrap;
     overflow-x: auto;
+    letter-spacing: 1.2;
 }
 
 .symbol {
@@ -52,7 +53,7 @@ body {
 }
 
 .text {
-    color: #cacaca;
+    color: #efefef;
 }
 
 .string {
@@ -65,6 +66,19 @@ body {
 
 .function {
     color: #50fa7b;
+}
+
+.inBuilt {
+    color: #fbae7e;
+    font-style: italic;
+}
+
+.operator {
+    color: rgb(255, 0, 251);
+}
+
+.type {
+    color: #ff79c6;
 }
 
 ::-webkit-scrollbar {
