@@ -1,4 +1,5 @@
 import { JSTOKENS } from "../LangTokens/JSTOKENS.js";
+let tabSpaceApplied = false;
 
 class ClassAssigner {
     Assign(editor, changedData, tokens, symbols) {
@@ -7,6 +8,7 @@ class ClassAssigner {
         const inbuilt = JsTokens.inBuilt;
         const operators = JsTokens.operators;
         const types = JsTokens.types;
+
 
         let children = [...editor.childNodes];
         tokens = tokens.filter(token => token !== '');
@@ -23,9 +25,15 @@ class ClassAssigner {
             if (symbols.test(token)) {
                 if (token.includes('"') || token.includes("'") || token.includes('`')) {
                     span.className = 'string';
+                } else if (token.includes('/')) {
+                    span.className = 'comment';
                 }
                 else {
-                    span.className = 'symbol';
+                    if (operators.includes(token.trim())) {
+                        span.className = "operator";
+                    } else {
+                        span.className = "symbol";
+                    }
                 }
             }
             else {
@@ -44,7 +52,7 @@ class ClassAssigner {
                         span.className = "function";
                     } else if (types.includes(token.trim())) {
                         span.className = "type";
-                    } else if (inbuilt.includes(token.trim())) { 
+                    } else if (inbuilt.includes(token.trim())) {
                         span.className = "inbuilt";
                     } else
                         span.className = "text";
@@ -61,7 +69,7 @@ class ClassAssigner {
         } else {
             children[children.length - 1].innerHTML = spansHolder.innerHTML;
         }
-        this.setEndOfContenteditable(editor)
+        this.setEndOfContenteditable(children[children.length - 1])
     }
 
     setEndOfContenteditable(contentEditableElement) {
@@ -80,6 +88,51 @@ class ClassAssigner {
             range.collapse(false);
             range.select();
         }
+    }
+
+    openSuggestions(tokenTemp, suggestionsPane) {
+        suggestionsPane.innerHTML = '';
+        suggestionsPane.visibility = 'hidden';
+        let suggestions = [];
+        const JsTokens = new JSTOKENS();
+        const keywords = JsTokens.keywords;
+        const inbuilt = JsTokens.inBuilt;
+        const types = JsTokens.types;
+
+        keywords.forEach(keyword => {
+            if (keyword.includes(tokenTemp)) {
+                suggestions.push(`${keyword}-keyword`);
+            }
+        })
+        inbuilt.forEach(inbuilt => {
+            if (inbuilt.includes(tokenTemp)) {
+                suggestions.push(`${inbuilt}-inbuilt`);
+            }
+        });
+        types.forEach(type => {
+            if (type.includes(tokenTemp)) {
+                suggestions.push(`${type}-type`);
+            }
+        })
+
+        suggestions.forEach(suggestion => {
+            const suggestionButton = document.createElement('button');
+            suggestionButton.innerText = suggestion.split('-')[0];
+            suggestionButton.className = 'suggestions-list';
+            suggestionButton.addEventListener('click', () => {
+                document.getElementById('Proton-editor').lastChild.lastChild.innerText = suggestionButton.innerText;
+                document.getElementById('Proton-editor').lastChild.lastChild.className = suggestion.split('-')[1];
+                suggestions = []
+                suggestionsPane.style.display = 'none';
+                document.getElementById('Proton-editor').focus();
+                this.setEndOfContenteditable(document.getElementById('Proton-editor'));
+            })
+            suggestionsPane.appendChild(suggestionButton);
+        })
+
+        suggestionsPane.style.display = 'grid';
+        suggestionsPane.style.left = document.getElementById('Proton-editor').lastChild.lastChild.offsetLeft;
+        suggestionsPane.style.top = document.getElementById('Proton-editor').lastChild.lastChild.offsetTop + 20;
     }
 }
 

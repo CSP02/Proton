@@ -1,6 +1,6 @@
 body {
     background-color: black;
-    font-family: "Droid Sans Mono", sans-serif;
+    font-family: 'Fira Code', monospace;
 }
 
 #ProtonWrapper {
@@ -44,6 +44,33 @@ body {
     letter-spacing: 1.2;
 }
 
+#options {
+    position: absolute;
+    right: 0;
+    float: right;
+    margin: .5rem;
+    color: white;
+}
+
+#suggestions {
+    display: none;
+    position: absolute;
+    display: grid;
+    color: white;
+}
+
+.suggestions-list {
+    background-color: #333333;
+    color: white;
+    border: none;
+    outline: none;
+    font-size: 14;
+}
+
+.suggestions-list:hover, .suggestions-list:focus {
+    background-color: #525252;
+}
+
 .symbol {
     color: rgb(167, 167, 167);
 }
@@ -79,6 +106,10 @@ body {
 
 .type {
     color: #ff79c6;
+}
+
+.comment {
+    color: #6272a4;
 }
 
 ::-webkit-scrollbar {

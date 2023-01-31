@@ -4,8 +4,14 @@ class Tokenizer {
     constructor(editor, lineCountElement, lineCountStr, count) {
         const Assigner = new ClassAssigner();
         const symbols = new RegExp(/[-!$%^&*()+|~=`{}\[\]:";'<>?,\. \/]/g);
+        let tokenTemp = '';
         editor.addEventListener("input", changedData => {
             count = changedData.target.childNodes.length;
+            tokenTemp += changedData.data;
+            if (changedData.data !== null && changedData.inputType !== 'deleteContentBackward') {
+                const suggestionsPane = document.getElementById('suggestions');
+                Assigner.openSuggestions(tokenTemp, suggestionsPane);
+            }
             if ((count === 0) || (count === 1 && editor.innerHTML === '<br>')) {
                 if (count !== 0) {
                     editor.removeChild(editor.childNodes[0]);
@@ -22,11 +28,14 @@ class Tokenizer {
                 div.className = `line`;
                 div.tableindex = `${j + 1}`;
             }
-            if (changedData.data !== null && changedData.inputType !== 'deleteContentBackward') {
+            if (changedData.data === ' ' || (changedData.data === null && changedData.inputType === 'insertParagraph') || (changedData.data === null && changedData.inputType === 'deleteContentBackward')) {
+                tokenTemp = ''
+            }
+            if ((changedData.data !== null && changedData.inputType !== 'deleteContentBackward') || (changedData.data === null && changedData.inputType === 'insertFromPaste')) {
                 let tokens = [];
                 let string
                 let token = '';
-                if (changedData === ' ') {
+                if (changedData.data === ' ' || !(/[A-Za-z0-9]/).test(changedData.data)) {
                     string = editor.childNodes[editor.childNodes.length - 1].innerText;
                 } else if (changedData.data === null && changedData.inputType === 'insertParagraph') {
                     string = editor.childNodes[editor.childNodes.length - 2].innerText;
@@ -51,6 +60,25 @@ class Tokenizer {
                         tokens.push(token);
                         if (char === '"' || char === "'" || char === '`') {
                             let strCloser = char;
+                            for (l; l < string.length; l++) {
+                                if (string[l + 1] !== strCloser) {
+                                    token += string[l];
+                                } else {
+                                    token += string[l];
+                                    token += string[l + 1];
+                                    l++;
+                                    break;
+                                }
+                            }
+                            tokens.push(token)
+                        } else if (char === '/') {
+                            let strCloser = char;
+                            if (string[l + 1] === '/') {
+                                strCloser = '\n';
+                            } else if (string[l + 1] === '*') {
+                                strCloser = '*/'
+                            }
+
                             for (l; l < string.length; l++) {
                                 if (string[l + 1] !== strCloser) {
                                     token += string[l];
