@@ -4,11 +4,19 @@ body {
 }
 
 #ProtonWrapper {
-    display: flex;
+    display: grid;
     height: 50vh;
     width: 100%;
     background-color: #242424;
     border-radius: .5rem;
+}
+
+#Proton-editor-wrapper {
+    display: flex;
+}
+
+#Proton-console-wrapper {
+    display: grid;
 }
 
 #autoformatHolder {
@@ -26,9 +34,9 @@ body {
     text-align: center;
     line-height: 1.5;
     background-color: #3b3b3b;
-    border-radius: inherit;
+    border-radius: .5rem;
     color: white;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 #Proton-editor {
@@ -44,12 +52,29 @@ body {
     letter-spacing: 1.2;
 }
 
+h3 {
+    margin: 0;
+    color: white;
+}
+
 #options {
     position: absolute;
     right: 0;
     float: right;
     margin: .5rem;
     color: white;
+    opacity: .1;
+}
+
+#options:hover{
+    opacity: 1;
+}
+
+#runCode{
+    background-color: rgb(159, 255, 124);
+    color: rgb(0, 0, 0);
+    padding: .5rem;
+    border-radius: .5rem;
 }
 
 #suggestions {
@@ -69,6 +94,30 @@ body {
 
 .suggestions-list:hover, .suggestions-list:focus {
     background-color: #525252;
+}
+
+#console {
+    height: 30vh;
+    overflow-y: auto;
+    background-color: #262626;
+    border-radius: .5rem;
+    padding: .2rem;
+}
+
+#console {
+    color: white;
+}
+
+#console p {
+    margin: .5rem;
+}
+
+.console-starter {
+    color: rgb(138, 255, 138);
+}
+
+.console-error {
+    color: rgb(255, 135, 111);
 }
 
 .symbol {

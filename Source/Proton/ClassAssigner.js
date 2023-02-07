@@ -9,7 +9,6 @@ class ClassAssigner {
         const operators = JsTokens.operators;
         const types = JsTokens.types;
 
-
         let children = [...editor.childNodes];
         tokens = tokens.filter(token => token !== '');
         const spansHolder = document.createElement("div");
@@ -17,11 +16,6 @@ class ClassAssigner {
             const token = tokens[k];
             const span = document.createElement("span");
             children = children.filter(el => el.className.includes('line'));
-            children.forEach(child => {
-                child.addEventListener('focus', () => {
-                    this.style.outline = '1px solid red';
-                })
-            })
             if (symbols.test(token)) {
                 if (token.includes('"') || token.includes("'") || token.includes('`')) {
                     span.className = 'string';
@@ -69,7 +63,7 @@ class ClassAssigner {
         } else {
             children[children.length - 1].innerHTML = spansHolder.innerHTML;
         }
-        this.setEndOfContenteditable(children[children.length - 1])
+        this.setEndOfContenteditable(changedData.target)
     }
 
     setEndOfContenteditable(contentEditableElement) {

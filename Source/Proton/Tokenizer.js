@@ -36,11 +36,11 @@ class Tokenizer {
                 let string
                 let token = '';
                 if (changedData.data === ' ' || !(/[A-Za-z0-9]/).test(changedData.data)) {
-                    string = editor.childNodes[editor.childNodes.length - 1].innerText;
+                    string = editor.lastChild.innerText;
                 } else if (changedData.data === null && changedData.inputType === 'insertParagraph') {
-                    string = editor.childNodes[editor.childNodes.length - 2].innerText;
+                    string = editor.lastChild.previousSibling.innerText;
                 } else {
-                    string = editor.childNodes[editor.childNodes.length - 1].innerText;
+                    string = editor.lastChild.innerText;
                 }
                 for (let l = 0; l < string.length; l++) {
                     const char = string[l];
