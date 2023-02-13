@@ -1,5 +1,4 @@
 import { JSTOKENS } from "../LangTokens/JSTOKENS.js";
-let tabSpaceApplied = false;
 
 class ClassAssigner {
     Assign(editor, changedData, tokens, symbols) {
@@ -19,7 +18,7 @@ class ClassAssigner {
             if (symbols.test(token)) {
                 if (token.includes('"') || token.includes("'") || token.includes('`')) {
                     span.className = 'string';
-                } else if (token.includes('/')) {
+                } else if (token.includes('/') && (tokens[k + 1].includes('*') || tokens[k + 1].includes('/'))) {
                     span.className = 'comment';
                 }
                 else {

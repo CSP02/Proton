@@ -33,9 +33,9 @@ class Proton {
             document.getElementsByClassName('console-starter')[document.getElementsByClassName('console-starter').length - 1].innerHTML += "Running your code..."
             let output = ''
             try {
-                let result = Function("return " + editor.innerText);
-                output = console.log(result)
-                document.getElementById('console').innerHTML += output;
+                let result = new Function(`${editor.innerText}`);
+                output = console.log(result());
+                document.getElementById('console').innerHTML += output.replace('undefined', '');
                 document.getElementById('console').innerHTML += '<p class="console-starter">> </p>';
             } catch (error) {
                 output = `${error.stack.split('at').join('<br>at').split('(').join(`<br>(`)}`
@@ -46,13 +46,13 @@ class Proton {
             logs = ''
         });
 
-        // console.log = function (...values) {
-        //     let output = ''
-        //     values.forEach(value => {
-        //         output += value + ' '
-        //     })
-        //     return logs += `<p>${output}</p>`;
-        // };
+        console.log = function (...values) {
+            let output = ''
+            values.forEach(value => {
+                output += value + ' '
+            })
+            return logs += `<p>${output}</p>`;
+        };
     }
 }
 

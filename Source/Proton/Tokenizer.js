@@ -77,6 +77,10 @@ class Tokenizer {
                                 strCloser = '\n';
                             } else if (string[l + 1] === '*') {
                                 strCloser = '*/'
+                            }else{
+                                tokens.push(char);
+                                token = '';
+                                continue;
                             }
 
                             for (l; l < string.length; l++) {
