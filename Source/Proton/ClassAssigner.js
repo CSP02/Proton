@@ -1,7 +1,7 @@
 import { JSTOKENS } from "../LangTokens/JSTOKENS.js";
 
 class ClassAssigner {
-    Assign(editor, changedData, tokens, symbols) {
+    Assign(editor, changedData, tokens, symbols, braceCount) {
         const JsTokens = new JSTOKENS();
         const keywords = JsTokens.keywords;
         const inbuilt = JsTokens.inBuilt;
@@ -9,6 +9,7 @@ class ClassAssigner {
         const types = JsTokens.types;
 
         let children = [...editor.childNodes];
+        const autoFormat = document.getElementById('autoformat').checked;
         tokens = tokens.filter(token => token !== '');
         const spansHolder = document.createElement("div");
         for (let k = 0; k < tokens.length; k++) {
@@ -61,6 +62,23 @@ class ClassAssigner {
             children[children.length - 2].innerHTML = spansHolder.innerHTML;
         } else {
             children[children.length - 1].innerHTML = spansHolder.innerHTML;
+        }
+
+        if(autoFormat){
+            if (changedData.data === '}') {
+                const firstBraceChilds = [];
+                const indents = editor.lastChild.getElementsByTagName('span');
+                let loopSize = braceCount * 2;
+                if (braceCount == 0) {
+                    loopSize = 2;
+                }
+                for (let h = 0; h < loopSize; h++) {
+                    firstBraceChilds.push(indents[h]);
+                }
+                firstBraceChilds.forEach(firstBraceChild => {
+                    firstBraceChild.remove();
+                })
+            }
         }
         this.setEndOfContenteditable(changedData.target)
     }

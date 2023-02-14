@@ -1,7 +1,7 @@
 import { ClassAssigner } from "./ClassAssigner.js";
 
 class Tokenizer {
-    constructor(editor, lineCountElement, lineCountStr, count) {
+    constructor(editor, lineCountElement, lineCountStr, count, braceCount) {
         const Assigner = new ClassAssigner();
         const symbols = new RegExp(/[-!$%^&*()+|~=`{}\[\]:";'<>?,\. \/]/g);
         let tokenTemp = '';
@@ -16,20 +16,29 @@ class Tokenizer {
                 if (count !== 0) {
                     editor.removeChild(editor.childNodes[0]);
                 }
-                editor.innerHTML += '<div><br></div>';
+                editor.innerHTML += `<div><br>${('&nbsp;').repeat(braceCount)}</div>`;
             }
             for (let i = 2; i <= count; i++) {
                 lineCountStr += `${i}.<br>`;
             }
+            if (changedData.data === ' ' || (changedData.data === null && changedData.inputType === 'insertParagraph') || (changedData.data === null && changedData.inputType === 'deleteContentBackward')) {
+                tokenTemp = '';
+            }
+            if (document.getElementById('autoformat').checked && changedData.data === null && changedData.inputType === 'insertParagraph') {
+                if (braceCount !== 0)
+                    editor.lastChild.innerHTML = `${('<span class="indentation">&nbsp;&nbsp;</span>').repeat(braceCount)}`;
+                if (editor.lastChild.lastChild.innerHTML.length === 0) {
+                    editor.lastChild.lastChild.innerHTML += '<br>'
+                }
+                Assigner.setEndOfContenteditable(editor.lastChild.lastChild);
+            }
+
             const divs = [...editor.getElementsByTagName("div")];
             for (let j = 0; j < divs.length; j++) {
                 const div = divs[j];
                 div.id = `line-${j + 1}`;
                 div.className = `line`;
                 div.tableindex = `${j + 1}`;
-            }
-            if (changedData.data === ' ' || (changedData.data === null && changedData.inputType === 'insertParagraph') || (changedData.data === null && changedData.inputType === 'deleteContentBackward')) {
-                tokenTemp = ''
             }
             if ((changedData.data !== null && changedData.inputType !== 'deleteContentBackward') || (changedData.data === null && changedData.inputType === 'insertFromPaste')) {
                 let tokens = [];
@@ -42,6 +51,7 @@ class Tokenizer {
                 } else {
                     string = editor.lastChild.innerText;
                 }
+
                 for (let l = 0; l < string.length; l++) {
                     const char = string[l];
                     if (l === string.length - 1) {
@@ -52,6 +62,17 @@ class Tokenizer {
                             token += char;
                             tokens.push(token);
                         }
+
+                        if (char === '{') {
+                            braceCount++;
+                        } else if (char === '}') {
+                            if (editor.innerText.length !== 0) {
+                                braceCount--;
+                            }
+                            else
+                                braceCount = 0;
+                        }
+
                         token = ''
                     }
                     else if ((/[A-Za-z0-9]/).test(char)) {
@@ -77,7 +98,7 @@ class Tokenizer {
                                 strCloser = '\n';
                             } else if (string[l + 1] === '*') {
                                 strCloser = '*/'
-                            }else{
+                            } else {
                                 tokens.push(char);
                                 token = '';
                                 continue;
@@ -100,7 +121,7 @@ class Tokenizer {
                         token = '';
                     }
                 }
-                Assigner.Assign(editor, changedData, tokens, symbols)
+                Assigner.Assign(editor, changedData, tokens, symbols, braceCount)
             }
             lineCountElement.innerHTML = lineCountStr;
             lineCountElement.scrollTo(lineCountElement.scrollWidth, lineCountElement.scrollHeight);

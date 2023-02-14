@@ -4,19 +4,36 @@ body {
 }
 
 #ProtonWrapper {
-    display: grid;
-    height: 50vh;
-    width: 100%;
-    background-color: #242424;
+    height: 98vh;
+    width: 99%;
+    background-color: #262626;
     border-radius: .5rem;
+    position: fixed;
+    overflow: auto;
+    resize: both;
+    border: 1px solid rgb(149, 149, 149);
 }
 
 #Proton-editor-wrapper {
     display: flex;
+    overflow: auto;
+    height: 46.5vh;
+    background-color: #262626;
+    resize: vertical;
+    border: 1px solid rgb(149, 149, 149);
+    border-radius: .5rem;
+    margin: .3rem;
 }
 
 #Proton-console-wrapper {
-    display: grid;
+    height: 46.5vh;
+    background-color: #262626;
+    padding: .5rem;
+    overflow: auto;
+    resize: vertical;
+    border-radius: .5rem;
+    border: 1px solid rgb(149, 149, 149);
+    margin: .3rem;
 }
 
 #autoformatHolder {
@@ -28,6 +45,7 @@ body {
 }
 
 #Ph-line-count {
+    height: inherit;
     width: max-content;
     margin: .3rem;
     padding: .5rem;
@@ -40,7 +58,7 @@ body {
 }
 
 #Proton-editor {
-    height: 47vh;
+    height: inherit;
     width: 95vw;
     margin: .3rem;
     padding: .5rem;
@@ -54,27 +72,114 @@ body {
 
 h3 {
     margin: 0;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 #options {
+    height: auto;
+    border-radius: .5rem;
+    background-color: #3b3b3b;
     position: absolute;
-    right: 0;
+    right: 10;
+    top: 10;
+    margin-top: -50vh;
+    /* display: grid; */
     float: right;
-    margin: .5rem;
+    padding: .5rem;
     color: white;
-    opacity: .1;
 }
 
-#options:hover{
+#options label {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+    align-items: center;
+}
+
+#options label:hover {
+    cursor: pointer;
+}
+
+#proton-options:hover {
     opacity: 1;
 }
 
-#runCode{
+#proton-options {
+    display: flex;
+    position: absolute;
+    right: 10;
+    float: right;
+    z-index: 1;
+}
+
+#showOptions {
+    background-color: transparent;
+    width: 2.3rem;
+    color: white;
+    border: none;
+}
+
+#showOptions:hover {
+    cursor: pointer;
+}
+
+#consoleStartPointer {
+    width: 3rem;
+    background-color: #2e2e2e;
+    color: white;
+    border: none;
+    outline: none;
+    margin: .3rem;
+    padding: .5rem;
+    border-radius: .5rem;
+}
+
+#save {
+    width: 100%;
+    background-color: #2e2e2e;
+    color: white;
+    border: none;
+    outline: none;
+    margin: .3rem;
+    padding: .5rem;
+    border-radius: .5rem;
+}
+
+#save:hover {
+    background-color: #1b1b1b;
+    cursor: pointer;
+}
+
+.linStr1,
+.linStr2 {
+    transform: rotate(0);
+    transition: .3s ease-in-out;
+}
+
+.slopeStr1 {
+    margin: 0px;
+    transform: rotate(45deg);
+    transition: .3s ease-in-out;
+}
+
+.slopeStr2 {
+    margin: 0px;
+    transform: rotate(-45deg);
+    transition: .3s ease-in-out;
+}
+
+#runCode {
     background-color: rgb(159, 255, 124);
     color: rgb(0, 0, 0);
     padding: .5rem;
+    margin: .2rem;
+    opacity: .1;
     border-radius: .5rem;
+}
+
+#runCode:hover {
+    opacity: 1;
+    cursor: pointer;
 }
 
 #suggestions {
@@ -82,6 +187,39 @@ h3 {
     position: absolute;
     display: grid;
     color: white;
+}
+
+#autoformat {
+    opacity: 0;
+}
+
+#customCheckbox {
+    height: 1.5rem;
+    width: 3rem;
+    border-radius: 5rem;
+    display: block;
+    background-color: #dcdcdc;
+    border: .1rem solid #dcdcdc;
+    transition: .2s ease-in-out;
+}
+
+#circle {
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    background-color: #ffffff;
+    display: block;
+    transition: .2s ease-in-out;
+}
+
+#autoformat:checked~#customCheckbox {
+    background-color: #50fa7b;
+    transition: .2s ease-in-out;
+}
+
+#autoformat:checked~#customCheckbox #circle {
+    margin-left: 1.5rem;
+    transition: .2s ease-in-out;
 }
 
 .suggestions-list {
@@ -92,20 +230,18 @@ h3 {
     font-size: 14;
 }
 
-.suggestions-list:hover, .suggestions-list:focus {
+.suggestions-list:hover,
+.suggestions-list:focus {
     background-color: #525252;
 }
 
 #console {
     height: 30vh;
-    overflow-y: auto;
     background-color: #262626;
     border-radius: .5rem;
-    padding: .2rem;
-}
-
-#console {
     color: white;
+    padding: .2rem;
+    overflow: auto;
 }
 
 #console p {
@@ -161,10 +297,21 @@ h3 {
     color: #6272a4;
 }
 
-::-webkit-scrollbar {
+#Ph-line-count::-webkit-scrollbar{
     display: none;
+
 }
 
-::-webkit-scrollbar-corner {
-    display: none;
+#Proton-console-wrapper::-webkit-scrollbar,
+#Proton-editor-wrapper::-webkit-scrollbar {
+    width: .5rem;
+    background-color: transparent;
+    color: transparent
+}
+
+#Proton-console-wrapper::-webkit-scrollbar-corner,
+#Proton-editor-wrapper::-webkit-scrollbar-corner {
+    background-color: transparent;
+    width: .3rem;
+    color: transparent
 }
