@@ -4,9 +4,11 @@ class JSTOKENS {
             'do', 'while', 'void', 'export', 'import', 'async', 'await',
             'return', 'try'
         ]
-        this.operators = ['=', '+', '-', '*', '/', '.', ',', '<', '>', ':']
+        this.operators = ['=', '+', '-', '*', '/', '.', ',', '<', '>', ':',
+                          '==', '===', '!=', '!==', '>=', '<=', '+=', '-=',
+                          '*=', '/=', '++', '--', '&&', '||', '!', '?', '=>']
         this.types = ['var', 'const', 'let', 'function', 'class', 'constructor']
-        this.inBuilt = ['console', 'this']
+        this.inBuilt = ['console', 'this', 'log(', '']
     }
 }
 export { JSTOKENS }

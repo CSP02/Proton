@@ -6,6 +6,7 @@ body {
 #ProtonWrapper {
     height: 98vh;
     width: 99%;
+    display: grid;
     background-color: #262626;
     border-radius: .5rem;
     position: fixed;
@@ -23,6 +24,7 @@ body {
     border: 1px solid rgb(149, 149, 149);
     border-radius: .5rem;
     margin: .3rem;
+    margin-top: 3rem;
 }
 
 #Proton-console-wrapper {
@@ -67,7 +69,6 @@ body {
     line-height: 1.5;
     white-space: nowrap;
     overflow-x: auto;
-    letter-spacing: 1.2;
 }
 
 h3 {
@@ -78,12 +79,11 @@ h3 {
 #options {
     height: auto;
     border-radius: .5rem;
-    background-color: #3b3b3b;
+    background-color: rgb(55, 55, 55);
     position: absolute;
-    right: 10;
-    top: 10;
+    right: 5;
+    top: 0;
     margin-top: -50vh;
-    /* display: grid; */
     float: right;
     padding: .5rem;
     color: white;
@@ -106,8 +106,9 @@ h3 {
 
 #proton-options {
     display: flex;
-    position: absolute;
-    right: 10;
+    position: fixed;
+    justify-content: flex-end;
+    right: 25;
     float: right;
     z-index: 1;
 }
@@ -123,7 +124,7 @@ h3 {
     cursor: pointer;
 }
 
-#consoleStartPointer {
+#consoleStartPointer, #font {
     width: 3rem;
     background-color: #2e2e2e;
     color: white;
@@ -132,6 +133,19 @@ h3 {
     margin: .3rem;
     padding: .5rem;
     border-radius: .5rem;
+}
+
+#font{
+    width: auto;
+}
+
+.fontFamilies{
+    background-color: rgb(50, 50, 50);
+    
+}
+
+option:hover{
+    background-color: rgb(74, 74, 74);
 }
 
 #save {
@@ -173,12 +187,11 @@ h3 {
     color: rgb(0, 0, 0);
     padding: .5rem;
     margin: .2rem;
-    opacity: .1;
     border-radius: .5rem;
 }
 
 #runCode:hover {
-    opacity: 1;
+    background-color: rgb(0, 255, 0);
     cursor: pointer;
 }
 
