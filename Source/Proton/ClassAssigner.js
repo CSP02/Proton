@@ -17,7 +17,7 @@ class ClassAssigner {
       const token = tokens[k];
       const span = document.createElement("span");
       children = children.filter((el) => el.className.includes("line"));
-      if (symbols.test(token)) {
+      if (symbols.test(token) || (/["'`]/).test(token)) {
         if (token.includes('"') || token.includes("'") || token.includes("`")) {
           span.className = "string";
         } else if (
@@ -84,7 +84,7 @@ class ClassAssigner {
         });
       }
     }
-    this.setEndOfContenteditable(changedData.target);
+    this.setEndOfContenteditable(changedData.target.lastChild);
   }
 
   setEndOfContenteditable(contentEditableElement) {
@@ -96,12 +96,7 @@ class ClassAssigner {
       selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
-    } else if (document.selection) {
-      range = document.body.createTextRange();
-      range.moveToElementText(contentEditableElement);
-      range.collapse(false);
-      range.select();
-    }
+    } 
   }
 
   openSuggestions(tokenTemp, suggestionsPane) {

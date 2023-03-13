@@ -10,13 +10,35 @@ class Proton {
     let count = 1;
     let lineCountStr = "1.<br>";
     const protonWrapper = document.getElementById("ProtonWrapper");
-
+    const settingsSvg = `
+    <svg height="30" width="30">
+        <line x1="5" y1="5" x2="28" y2="5" stroke-linecap="round" stroke-width="1"/>
+        <circle cx="12" cy="5" r="3" stroke-width="1"/>
+        <line x1="5" y1="15" x2="28" y2="15" stroke-linecap="round" stroke-width="1"/>
+        <circle cx="19" cy="15" r="3" stroke-width="1"/>
+        <line x1="5" y1="25" x2="28" y2="25" stroke-linecap="round" stroke-width="1"/>
+        <circle cx="12" cy="25" r="3" stroke-width="1"/>
+    </svg>`
+    const closeSvg = `
+    <svg height="30" width="30">
+        <line x1="5" y1="5" x2="25" y2="25" stroke-width="1" stroke-linecap="round" stroke="white"/>
+        <line x1="5" y1="25" x2="25" y2="5" stroke-width="1" stroke-linecap="round" stroke="white"/>
+    </svg>`
+    const runSvg = `
+    <svg height="30" width="30">
+    <path d="M 5 5 L 25 15 5 25" stroke-linecap="round" stroke-width="1"/>
+    </svg>
+    `
     protonWrapper.innerHTML = `
     <nav id="Proton-options">
-    <button id="runCode" title="Run your code">Run</button>
-    <button id="showOptions" title="options"><hr id="linStr1" class="linStr1"><hr id="linStr2" class="linStr2"></button>
+    <button id="runCode" title="Run your code">${runSvg}</button>
+    <button id="showOptions" title="options">${settingsSvg}</button>
     </nav>
-    <div id="options"><h3>Editor:</h3><label for="autoformat">Auto format
+    <div id="options" class="pr-front">
+    <div id="pr-close-holder">
+    <h1>Settings:</h1>
+    <button id="pr-closeOptions">${closeSvg}</button></div>
+    <div id="settings_holder"><h3>Editor:</h3><label for="autoformat">Auto format
     <input type="checkbox" id="autoformat" name="autoformat" checked="true">
     <span id="customCheckbox"><div id="circle"></div></span>
     </label>
@@ -31,7 +53,7 @@ class Proton {
     <input type="Text" id="consoleStartPointer" name="consoleStartPointer" value=">" maxlength=3>
     </label>
     <button id="save">Save</button>
-    </div>
+    </div></div>
     <div id="Proton-editor-Wrapper">
     <div id="Ph-line-count"></div>
     <div id="Proton-editor" spellcheck="false" contenteditable="true"></div>
@@ -45,6 +67,7 @@ class Proton {
     const protonEditorWrapper = document.getElementById(
       "Proton-editor-Wrapper"
     );
+    const protonOptions = document.getElementById("options");
     const suggestionsPane = document.getElementById("suggestions");
     const protonConsoleWrapper = document.getElementById(
       "Proton-console-wrapper"
@@ -63,7 +86,7 @@ class Proton {
     editor.innerHTML +=
       '<div class="line" id="line-1" contenteditable><br></div>';
     new Tokenizer(editor, lineCountElement, lineCountStr, count, braceCount);
-    
+
     document.getElementById("runCode").addEventListener("click", () => {
       runCode();
     });
@@ -77,28 +100,28 @@ class Proton {
     };
 
     document.getElementById("showOptions").addEventListener("click", () => {
-      const toggler = new Toggler();
-      toggler.toggleSlide("options", "top", 0.6);
-      toggler.toggleClass("linStr1", "linStr1", "slopeStr1");
-      toggler.toggleClass("linStr2", "linStr2", "slopeStr2");
+      protonOptions.style.display = "block";
     });
+
+    document.getElementById("pr-closeOptions").addEventListener("click", () => {
+      protonOptions.style.display = "none";
+    })
 
     document.getElementById("save").addEventListener("click", () => {
       consoleStarter = document.getElementById("consoleStartPointer").value;
       document.getElementById(
         "console"
       ).innerHTML = `<p class="console-starter">${consoleStarter} </p>`;
-      editor.style.fontFamily = `'${
-        document.getElementById("font").value
-      }', monospace`;
+      editor.style.fontFamily = `'${document.getElementById("font").value
+        }', monospace`;
     });
 
     function runCode() {
       document
         .getElementsByClassName("console-starter")
-        [
-          document.getElementsByClassName("console-starter").length - 1
-        ].setAttribute("contenteditable", "false");
+      [
+        document.getElementsByClassName("console-starter").length - 1
+      ].setAttribute("contenteditable", "false");
       let output = "";
       try {
         let result = new Function(`"use strict";\n${editor.innerText}`);
@@ -106,7 +129,8 @@ class Proton {
         protonConsole.innerHTML += output.replace("undefined", "");
         document.getElementsByClassName("console-starter")[
           document.getElementsByClassName("console-starter").length - 1
-        ].innerHTML += "code successfully executed!";
+        ].innerHTML += "Running...";
+        protonConsole.innerHTML += `<p>code successfully executed!</p>`;
         protonConsole.innerHTML += `<p class="console-starter" contenteditable="true">${consoleStarter} </p>`;
       } catch (error) {
         output = `${error.stack
@@ -116,11 +140,9 @@ class Proton {
           .join(`<br>(`)}`;
         document.getElementsByClassName("console-starter")[
           document.getElementsByClassName("console-starter").length - 1
-        ].innerHTML += "code execution failed!";
-        document.getElementsByClassName("console-starter")[
-          document.getElementsByClassName("console-starter").length - 1
         ].className = 'console-error'
         protonConsole.innerHTML += `<p class="console-error">${output}</p>`;
+        protonConsole.innerHTML += `<p class="console-error">code executed with an error!</p>`;
         protonConsole.innerHTML += `<p class="console-starter" contenteditable="true">${consoleStarter} </p>`;
       }
       protonConsole.scrollTo(
@@ -134,6 +156,58 @@ class Proton {
       document
         .getElementById("ph-line-count")
         .scrollTo(document.getElementById("ph-line-count").scrollHeight);
+
+    protonEditorWrapper.addEventListener("mousedown", (e) => {
+      if (e.altKey) {
+        document.addEventListener("mousemove", dragProtonEditor);
+        protonEditorWrapper.addEventListener("mouseup", () => {
+          document.removeEventListener("mousemove", dragProtonEditor)
+          protonEditorWrapper.className = "";
+        })
+      }
+    })
+
+    protonConsoleWrapper.addEventListener("mousedown", (e) => {
+      if (e.altKey) {
+        document.addEventListener("mousemove", dragProtonConsole);
+        protonConsoleWrapper.addEventListener("mouseup", () => {
+          document.removeEventListener("mousemove", dragProtonConsole)
+          protonConsoleWrapper.className = "";
+        })
+      }
+    })
+
+    protonOptions.addEventListener("mousedown", (e) => {
+      if (e.altKey) {
+        document.addEventListener("mousemove", dragProtonOptions);
+        protonOptions.addEventListener("mouseup", () => {
+          document.removeEventListener("mousemove", dragProtonOptions)
+          protonOptions.className = "";
+        })
+      }
+    })
+
+    function dragProtonEditor(event) {
+      protonEditorWrapper.style.transform = `translate(
+        ${event.clientX - protonEditorWrapper.offsetWidth / 2}px,
+        ${event.clientY - protonEditorWrapper.offsetHeight / 2}px
+        )`;
+      protonEditorWrapper.className = "reposition";
+    }
+    function dragProtonConsole(event) {
+      protonConsoleWrapper.style.transform = `translate(
+        ${event.clientX - protonConsoleWrapper.offsetWidth / 2}px,
+        ${event.clientY - protonConsoleWrapper.offsetTop - protonConsoleWrapper.offsetHeight / 2}px
+        )`;
+      protonConsoleWrapper.className = "reposition";
+    }
+    function dragProtonOptions(event) {
+      protonOptions.style.transform = `translate(
+        ${event.clientX - protonOptions.offsetWidth / 2}px,
+        ${event.clientY - protonOptions.offsetTop - protonOptions.offsetHeight / 2}px
+        )`;
+      protonOptions.className = "reposition";
+    }
   }
 }
 
