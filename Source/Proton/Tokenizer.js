@@ -6,6 +6,10 @@ class Tokenizer {
     const Assigner = new ClassAssigner();
     const symbols = new RegExp(/[-!$%^&*()+|~=`{}\[\]:";'<>?,\. \/]/g);
     let tokenTemp = "";
+    let CEE = editor;
+    window.onclick = (click) =>{
+      CEE = click.srcElement;
+    }
     editor.addEventListener("input", (changedData) => {
       count = changedData.target.childNodes.length;
       tokenTemp += changedData.data;
@@ -158,7 +162,7 @@ class Tokenizer {
             token = "";
           }
         }
-        Assigner.Assign(editor, changedData, tokens, symbols, braceCount);
+        Assigner.Assign(editor, changedData, tokens, symbols, braceCount, CEE);
       }
       lineCountElement.innerHTML = lineCountStr;
       lineCountElement.scrollTo(
@@ -166,6 +170,11 @@ class Tokenizer {
         lineCountElement.scrollHeight
       );
       editor.scrollTo(editor.scrollWidth, editor.scrollHeight);
+
+      editor.addEventListener("scroll", () =>{
+        lineCountElement.scrollTop = editor.scrollTop;
+      });
+      
       lineCountStr = "1.<br>";
     });
   }

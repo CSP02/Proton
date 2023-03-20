@@ -1,55 +1,68 @@
-body {
-    background-color: black;
-    font-family: 'Fira Code', monospace;
-}
-
 #ProtonWrapper {
     height: 98vh;
-    width: 99%;
-    display: grid;
+    width: 99vw;
+    display: flex;
     background-color: #262626;
     border-radius: .5rem;
     position: fixed;
     overflow: auto;
     resize: both;
+    font-family: 'Fira Code', monospace;
     border: 1px solid rgb(149, 149, 149);
 }
 
 #Proton-editor-wrapper {
+    width: 50vw;
     cursor: normal;
-    display: flex;
     overflow: auto;
-    height: 46.5vh;
     background-color: #262626;
-    resize: vertical;
+    resize: both;
     border: 1px solid rgb(149, 149, 149);
     border-radius: .5rem;
     margin: .3rem;
+}
+
+#files{
+    height: max-content;
+    margin: 1rem;
+    padding: .5rem;
+    color: white;
+}
+
+#seperator {
+    display: grid;
+    height: 100vh;
+    width: .2rem;
+    align-items: center;
+}
+
+#sep-indicator {
+    height: 5vh;
+    width: .2rem;
+    background-color: #dfdfdf;
+    border-radius: .5rem;
+}
+
+#seperator:hover {
+    cursor: col-resize;
 }
 
 #Proton-console-wrapper {
-    cursor: normal;
-    height: 46.5vh;
+    height: 95vh;
+    width: 50vw;
     background-color: #262626;
     padding: .5rem;
     overflow: auto;
-    resize: vertical;
+    resize: both;
     border-radius: .5rem;
     border: 1px solid rgb(149, 149, 149);
     margin: .3rem;
 }
 
-#autoformatHolder {
-    position: absolute;
-    color: white;
-    margin: .3rem;
-    padding: .5rem;
-    right: 0;
-}
-
 #Ph-line-count {
-    height: inherit;
-    width: max-content;
+    height: 80vh;
+    min-width: min-content;
+    max-width: fit-content;
     margin: .3rem;
     padding: .5rem;
     text-align: center;
@@ -61,7 +74,7 @@ body {
 }
 
 #Proton-editor {
-    height: inherit;
+    height: 80vh;
     width: 95vw;
     margin: .3rem;
     padding: .5rem;
@@ -78,8 +91,7 @@ h3 {
 }
 
 #options {
-    height: 50vh;
-    width: 50vw;
+    min-width: 25vw;
     border-radius: .5rem;
     background-color: rgb(55, 55, 55);
     position: absolute;
@@ -91,15 +103,16 @@ h3 {
     overflow: auto;
 }
 
-#pr-close-holder, #settings_holder{
+#pr-close-holder,
+#settings_holder {
     padding: .7rem;
 }
 
-#pr-close-holder h1{
+#pr-close-holder h1 {
     margin: 0;
 }
 
-#pr-close-holder{
+#pr-close-holder {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -110,7 +123,9 @@ h3 {
     backdrop-filter: blur(15px);
 }
 
-#pr-closeOptions, #showOptions, #runCode{
+#pr-closeOptions,
+#showOptions,
+#runCode {
     float: right;
     background-color: transparent;
     padding: .5rem;
@@ -136,7 +151,7 @@ h3 {
 
 #proton-options {
     display: flex;
-    position: fixed;
+    position: absolute;
     justify-content: flex-end;
     right: 25;
     margin: 1rem;
@@ -153,12 +168,14 @@ h3 {
     cursor: pointer;
 }
 
-#showOptions line, #showOptions circle{
+#showOptions line,
+#showOptions circle {
     stroke: white;
     fill: white;
 }
 
-#consoleStartPointer, #font {
+#consoleStartPointer,
+#font {
     width: 3rem;
     background-color: #2e2e2e;
     color: white;
@@ -169,22 +186,22 @@ h3 {
     border-radius: .5rem;
 }
 
-#font{
+#font {
     width: auto;
 }
 
-.fontFamilies{
+.fontFamilies {
     background-color: rgb(50, 50, 50);
-    
+
 }
 
-option:hover{
+option:hover {
     background-color: rgb(74, 74, 74);
 }
 
 #save {
     width: 100%;
-    background-color: #2e2e2e;
+    background-color: #454545;
     color: white;
     border: none;
     outline: none;
@@ -193,12 +210,15 @@ option:hover{
     border-radius: .5rem;
 }
 
-#save:hover, #pr-closeOptions:hover, #runCode:hover, #showOptions:hover {
+#save:hover,
+#pr-closeOptions:hover,
+#runCode:hover,
+#showOptions:hover {
     background-color: #2e2e2e;
     cursor: pointer;
 }
 
-#runcode path{
+#runcode path {
     fill: rgb(128, 233, 128);
 }
 
@@ -208,11 +228,11 @@ option:hover{
     color: white;
 }
 
-#autoformat {
+.pr-checkboxes {
     opacity: 0;
 }
 
-#customCheckbox {
+.customCheckbox {
     height: 1.5rem;
     width: 3rem;
     border-radius: 5rem;
@@ -231,12 +251,14 @@ option:hover{
     transition: .2s ease-in-out;
 }
 
-#autoformat:checked~#customCheckbox {
+#autoformat:checked~#autoformat-checkbox,
+#pr-draggable-wrappers:checked~#pr-draggable {
     background-color: #50fa7b;
     transition: .2s ease-in-out;
 }
 
-#autoformat:checked~#customCheckbox #circle {
+#autoformat:checked~#autoformat-checkbox #circle,
+#pr-draggable-wrappers:checked~#pr-draggable #circle {
     margin-left: 1.5rem;
     transition: .2s ease-in-out;
 }
@@ -315,7 +337,7 @@ option:hover{
     color: #6272a4;
 }
 
-#Ph-line-count::-webkit-scrollbar{
+#Ph-line-count::-webkit-scrollbar {
     display: none;
 
 }
@@ -334,14 +356,18 @@ option:hover{
     color: transparent
 }
 
-#protonWrapper::-webkit-scrollbar, #options::-webkit-scrollbar{
+#protonWrapper::-webkit-scrollbar,
+#options::-webkit-scrollbar {
     width: .3rem;
     background-color: transparent;
 }
-#protonWrapper::-webkit-scrollbar-thumb, #options::-webkit-scrollbar-thumb {
+
+#protonWrapper::-webkit-scrollbar-thumb,
+#options::-webkit-scrollbar-thumb {
     background-color: #676767;
     border-radius: .5rem;
 }
-.reposition{
+
+.reposition {
     cursor: all-scroll;
 }

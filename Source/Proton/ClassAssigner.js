@@ -2,7 +2,7 @@
 import { JSTOKENS } from "../LangTokens/JSTOKENS.js";
 
 class ClassAssigner {
-  Assign(editor, changedData, tokens, symbols, braceCount) {
+  Assign(editor, changedData, tokens, symbols, braceCount, CEE) {
     const JsTokens = new JSTOKENS();
     const keywords = JsTokens.keywords;
     const inbuilt = JsTokens.inBuilt;
@@ -84,7 +84,7 @@ class ClassAssigner {
         });
       }
     }
-    this.setEndOfContenteditable(changedData.target.lastChild);
+    this.setEndOfContenteditable(CEE);
   }
 
   setEndOfContenteditable(contentEditableElement) {

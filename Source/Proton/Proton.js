@@ -3,7 +3,7 @@ import { Tokenizer } from "./Tokenizer.js";
 
 let logs = "";
 let braceCount = 0;
-let consoleStarter = ">";
+let consoleStarter = "❯";
 
 class Proton {
   constructor() {
@@ -33,40 +33,64 @@ class Proton {
     <nav id="Proton-options">
     <button id="runCode" title="Run your code">${runSvg}</button>
     <button id="showOptions" title="options">${settingsSvg}</button>
-    </nav>
-    <div id="options" class="pr-front">
+</nav>
+<div id="options" class="pr-front">
     <div id="pr-close-holder">
-    <h1>Settings:</h1>
-    <button id="pr-closeOptions">${closeSvg}</button></div>
-    <div id="settings_holder"><h3>Editor:</h3><label for="autoformat">Auto format
-    <input type="checkbox" id="autoformat" name="autoformat" checked="true">
-    <span id="customCheckbox"><div id="circle"></div></span>
-    </label>
-    <label for="Font">Font family:
-    <select id="font" name="Font" value="Fira Code">
-    <option class="fontFamilies">Fira code</option>
-    <option class="fontFamilies">Roboto</option>
-    <option class="fontFamilies">Poppins</option>
-    </select>
-    </label>
-    <h3>Console:</h3><label for="consoleStartPointer">Starter symbol:
-    <input type="Text" id="consoleStartPointer" name="consoleStartPointer" value=">" maxlength=3>
-    </label>
-    <button id="save">Save</button>
-    </div></div>
-    <div id="Proton-editor-Wrapper">
-    <div id="Ph-line-count"></div>
-    <div id="Proton-editor" spellcheck="false" contenteditable="true"></div>
-    <div id="suggestions"></div></div>
-    <div id="Proton-console-wrapper">
+        <h1>Settings:</h1>
+        <button id="pr-closeOptions">${closeSvg}</button>
+    </div>
+    <div id="settings_holder">
+        <h3>General:</h3>
+        <label for="pr-draggable-wrappers">Draggable wrappers:
+            <input type="checkbox" class="pr-checkboxes" name="pr-draggable-wrappers" checked="true"
+                id="pr-draggable-wrappers">
+            <span id="pr-draggable" class="customCheckbox">
+                <div id="circle"></div>
+            </span>
+        </label>
+        <h3>Editor:</h3><label for="autoformat">Auto format
+            <input type="checkbox" class="pr-checkboxes" name="autoformat" checked="true" id="autoformat">
+            <span id="autoformat-checkbox" class="customCheckbox">
+                <div id="circle"></div>
+            </span>
+        </label>
+        <label for="Font">Font family:
+            <select id="font" name="Font" value="Fira Code">
+                <option class="fontFamilies">Fira code</option>
+                <option class="fontFamilies">Roboto</option>
+                <option class="fontFamilies">Poppins</option>
+            </select>
+        </label>
+        <h3>Console:</h3><label for="consoleStartPointer">Starter symbol:
+            <input type="Text" id="consoleStartPointer" name="consoleStartPointer" value="❯" maxlength=3>
+        </label>
+        <button id="save">Save</button>
+    </div>
+</div>
+<div id="Proton-editor-Wrapper">
+    <div id="files">Index.html</div>
+    <div style="display:flex;">
+        <div id="Ph-line-count"></div>
+        <div id="Proton-editor" spellcheck="false" contenteditable="true"></div>
+        <div id="suggestions"></div>
+    </div>
+</div>
+<div id="seperator">
+    <div id="sep-indicator"></div>
+</div>
+<div id="Proton-console-wrapper">
     <h3>Console:</h3>
-    <div id="console"><p class="console-starter" contenteditable="true">${consoleStarter} </p></div>
-    </div>`;
+    <div id="console">
+        <p class="console-starter" contenteditable="true">${consoleStarter} </p>
+    </div>
+</div>
+    `;
 
     const protonEditor = document.getElementById("Proton-editor");
     const protonEditorWrapper = document.getElementById(
       "Proton-editor-Wrapper"
     );
+    const draggableWrappers = document.getElementById("pr-draggable-wrappers").checked;
     const protonOptions = document.getElementById("options");
     const suggestionsPane = document.getElementById("suggestions");
     const protonConsoleWrapper = document.getElementById(
@@ -75,13 +99,14 @@ class Proton {
     const protonConsole = document.getElementById("console");
     const linksTags = [document.head.getElementsByTagName("link")];
     suggestionsPane.style.left = protonEditor.offsetLeft;
-    suggestionsPane.style.top = protonEditor.offsetTop + 20;
+    suggestionsPane.style.top = 50;
     document.head.innerHTML = `<link rel="stylesheet" href="Source/ProtonStyling/Proton.css">`;
     linksTags.forEach((linkTag) => {
       document.head.append(linkTag);
     });
     const lineCountElement = document.getElementById("Ph-line-count");
     const editor = protonEditor;
+    editor.focus();
     lineCountElement.innerHTML = "1.<br>";
     editor.innerHTML +=
       '<div class="line" id="line-1" contenteditable><br></div>';
@@ -157,25 +182,27 @@ class Proton {
         .getElementById("ph-line-count")
         .scrollTo(document.getElementById("ph-line-count").scrollHeight);
 
-    protonEditorWrapper.addEventListener("mousedown", (e) => {
-      if (e.altKey) {
-        document.addEventListener("mousemove", dragProtonEditor);
-        protonEditorWrapper.addEventListener("mouseup", () => {
-          document.removeEventListener("mousemove", dragProtonEditor)
-          protonEditorWrapper.className = "";
-        })
-      }
-    })
+    if (draggableWrappers) {
+      protonEditorWrapper.addEventListener("mousedown", (e) => {
+        if (e.altKey) {
+          document.addEventListener("mousemove", dragProtonEditor);
+          protonEditorWrapper.addEventListener("mouseup", () => {
+            document.removeEventListener("mousemove", dragProtonEditor)
+            protonEditorWrapper.className = "";
+          })
+        }
+      })
 
-    protonConsoleWrapper.addEventListener("mousedown", (e) => {
-      if (e.altKey) {
-        document.addEventListener("mousemove", dragProtonConsole);
-        protonConsoleWrapper.addEventListener("mouseup", () => {
-          document.removeEventListener("mousemove", dragProtonConsole)
-          protonConsoleWrapper.className = "";
-        })
-      }
-    })
+      protonConsoleWrapper.addEventListener("mousedown", (e) => {
+        if (e.altKey) {
+          document.addEventListener("mousemove", dragProtonConsole);
+          protonConsoleWrapper.addEventListener("mouseup", () => {
+            document.removeEventListener("mousemove", dragProtonConsole)
+            protonConsoleWrapper.className = "";
+          })
+        }
+      })
+    }
 
     protonOptions.addEventListener("mousedown", (e) => {
       if (e.altKey) {
@@ -186,6 +213,24 @@ class Proton {
         })
       }
     })
+    const seperator = document.getElementById("seperator");
+
+    seperator.addEventListener("mousedown", mouseDown => {
+      document.addEventListener("mousemove", changeSize);
+      document.addEventListener("mouseup", () => {
+        document.removeEventListener("mousemove", changeSize);
+        document.body.style.cursor = "";
+      })
+    })
+
+    function changeSize(event) {
+      protonEditorWrapper.style.width = event.clientX + "px";
+      seperator.style.left = event.clientX + "px";
+      protonConsoleWrapper.style = "";
+      protonConsoleWrapper.style.left = event.clientX + "px";
+      protonConsoleWrapper.style.width = window.innerWidth - event.clientX + "px";
+      document.body.style.cursor = "col-resize";
+    }
 
     function dragProtonEditor(event) {
       protonEditorWrapper.style.transform = `translate(
@@ -195,8 +240,9 @@ class Proton {
       protonEditorWrapper.className = "reposition";
     }
     function dragProtonConsole(event) {
+      protonConsoleWrapper.style = "";
       protonConsoleWrapper.style.transform = `translate(
-        ${event.clientX - protonConsoleWrapper.offsetWidth / 2}px,
+        ${event.clientX - protonConsoleWrapper.offsetWidth / 2 - protonConsoleWrapper.offsetLeft}px,
         ${event.clientY - protonConsoleWrapper.offsetTop - protonConsoleWrapper.offsetHeight / 2}px
         )`;
       protonConsoleWrapper.className = "reposition";
